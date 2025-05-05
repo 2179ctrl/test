@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>奇怪的欢迎</title>
+  <title>[GHOST_CONNECTED]</title>
   <style>
     body {
       background-color: #111;
@@ -33,6 +33,11 @@
       margin-top: 20px;
       font-size: 1.2em;
       color: #f9c;
+      opacity: 1;
+      transition: opacity 1s ease;
+    }
+    .fade-out {
+      opacity: 0;
     }
   </style>
 </head>
@@ -68,7 +73,7 @@
     const randomIndex = Math.floor(Math.random() * messages.length);
     document.getElementById('message').textContent = messages[randomIndex];
 
-    // 简单回应逻辑
+    // 响应逻辑
     function respond() {
       const input = document.getElementById('userInput').value.toLowerCase();
       let responseBox = document.getElementById('response');
@@ -76,15 +81,21 @@
       const isGreeting = greetings.some(word => input.includes(word));
       const isAskingIdentity = identityQuestions.some(word => input.includes(word));
 
+      let reply = '嗯？你在说什么奇怪的话？';
       if (isGreeting) {
-        let reply = greetingResponses[Math.floor(Math.random() * greetingResponses.length)];
-        responseBox.textContent = reply;
+        reply = greetingResponses[Math.floor(Math.random() * greetingResponses.length)];
       } else if (isAskingIdentity) {
-        let reply = identityResponses[Math.floor(Math.random() * identityResponses.length)];
-        responseBox.textContent = reply;
-      } else {
-        responseBox.textContent = '嗯？你在说什么奇怪的话？';
+        reply = identityResponses[Math.floor(Math.random() * identityResponses.length)];
       }
+
+      // 显示回答 + 移除淡出类
+      responseBox.textContent = reply;
+      responseBox.classList.remove('fade-out');
+
+      // 设置2秒后淡出
+      setTimeout(() => {
+        responseBox.classList.add('fade-out');
+      }, 2000);
     }
   </script>
 </body>
