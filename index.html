@@ -61,27 +61,40 @@
     ];
 
     const greetings = ['你好', '嗨', 'hi', '哈喽', 'hello', 'hey'];
-    const identityQuestions = ['你是谁', '你是', '是谁', '是什么'];
 
-    const greetingResponses = ['嗨唷！', '嗨呀！', '你终于来了嘿嘿。', '呀——吓到你了吗？','我是谁？你不该问的，对吧？','我是…嗯，不是你妈妈啦。','你不是刚刚，点开了我吗？','ghost.sys 正在响应，请勿拔电源。','别紧张，我只是借你的设备说句话。'];
+    const identityKeywords = ['你是谁', '你是'];
+
+    const greetingResponses = ['嗨唷！', '嗨呀！', '你终于来了嘿嘿。', '呀——吓到你了吗？'];
+    const identityResponses = [
+      '我是谁？你不该问的，对吧？',
+      '我是…嗯，不是你妈妈啦。',
+      '你不是刚刚，点开了我吗？',
+      'ghost.sys 正在响应，请勿拔电源。',
+      '别紧张，我只是借你的设备说句话。'
+    ];
 
     // 显示开场语
     const randomIndex = Math.floor(Math.random() * messages.length);
     document.getElementById('message').textContent = messages[randomIndex];
 
+    function cleanInput(input) {
+      return input
+        .toLowerCase()
+        .replace(/[？?！，,。.、“”"()（）\s]/g, ''); // 去除标点和空格
+    }
+
     function respond() {
-      const input = document.getElementById('userInput').value.toLowerCase();
+      const rawInput = document.getElementById('userInput').value;
+      const cleaned = cleanInput(rawInput);
       const responseBox = document.getElementById('response');
       responseBox.textContent = '';
 
-      const isGreeting = greetings.some(word => input.includes(word));
-      const isAskingIdentity = identityQuestions.some(word => input.includes(word));
-
       let reply = '嗯？你在说什么奇怪的话？';
-      if (isGreeting) {
-        reply = greetingResponses[Math.floor(Math.random() * greetingResponses.length)];
-      } else if (isAskingIdentity) {
+
+      if (identityKeywords.some(keyword => cleaned.includes(keyword))) {
         reply = identityResponses[Math.floor(Math.random() * identityResponses.length)];
+      } else if (greetings.some(word => cleaned.includes(word))) {
+        reply = greetingResponses[Math.floor(Math.random() * greetingResponses.length)];
       }
 
       // 打字机效果逐字显示
