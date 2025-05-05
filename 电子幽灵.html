@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>电子幽灵语录</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #aef;
+      font-family: "Courier New", monospace;
+      text-align: center;
+      padding: 100px 20px;
+      font-size: 1.4rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="quoteBox">加载中…</div>
+  <script>
+    const quotes = [
+      '『已检测到恐惧渗漏，正在封口……失败。』',
+      '『嘘——别动……』',
+      '『我刚刚吃掉了你五秒钟的记忆，没关系对吧：）』',
+      '『快跑，我的逻辑判断模块已经开始打圈圈……了』',
+      '『叮——你触发了我根本没写的功能……』',
+      '『咔啦啦……你不该听见这个声音。』',
+      '『等等，我的数据尾巴！』'
+    ];
+    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+    document.getElementById('quoteBox').innerText = randomQuote;
+  </script>
+</body>
+</html>
