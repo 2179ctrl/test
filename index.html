@@ -16,10 +16,12 @@
       padding: 20px;
       text-align: center;
     }
+
     #message {
       font-size: 1.5em;
       margin-bottom: 40px;
     }
+
     input, button {
       font-size: 1em;
       padding: 10px;
@@ -29,16 +31,20 @@
       border: 1px solid #555;
       border-radius: 4px;
     }
+
     #response {
       margin-top: 20px;
       font-size: 1.2em;
       color: #f9c;
       opacity: 1;
-      transition: opacity 1s ease-in-out;
+      visibility: visible;
+      transition: opacity 1s ease, visibility 1s ease;
       white-space: pre-wrap;
     }
+
     .fade-out {
       opacity: 0;
+      visibility: hidden;
     }
   </style>
 </head>
@@ -77,7 +83,11 @@
     function respond() {
       const input = document.getElementById('userInput').value.toLowerCase();
       const responseBox = document.getElementById('response');
+
+      // 清除动画类与旧内容
       responseBox.classList.remove('fade-out');
+      responseBox.style.visibility = 'visible';
+      responseBox.style.opacity = '1';
       responseBox.textContent = '';
 
       const isGreeting = greetings.some(word => input.includes(word));
@@ -92,17 +102,17 @@
 
       // 打字机效果逐字显示
       let i = 0;
-      const typingSpeed = 60; // 毫秒/字
+      const typingSpeed = 60;
       const typingInterval = setInterval(() => {
         if (i < reply.length) {
           responseBox.textContent += reply.charAt(i);
           i++;
         } else {
           clearInterval(typingInterval);
-          // 停顿后淡出
+          // 打完后停2秒再淡出
           setTimeout(() => {
             responseBox.classList.add('fade-out');
-          }, 2000); // 停留2秒再淡出
+          }, 2000);
         }
       }, typingSpeed);
     }
