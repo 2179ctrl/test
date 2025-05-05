@@ -36,15 +36,7 @@
       margin-top: 20px;
       font-size: 1.2em;
       color: #f9c;
-      opacity: 1;
-      visibility: visible;
-      transition: opacity 1s ease, visibility 1s ease;
       white-space: pre-wrap;
-    }
-
-    .fade-out {
-      opacity: 0;
-      visibility: hidden;
     }
   </style>
 </head>
@@ -73,7 +65,11 @@
 
     const greetingResponses = ['嗨唷！', '嗨呀！', '你终于来了嘿嘿。', '呀——吓到你了吗？'];
     const identityResponses = [
-      '我是这个页面的灵魂。你点开我，就已经晚啦。'
+      '我是谁？你不该问的，对吧？',
+      '我是…嗯，不是你妈妈啦。',
+      '你不是刚刚，点开了我吗？',
+      'ghost.sys 正在响应，请勿拔电源。',
+      '别紧张，我只是借你的设备说句话。'
     ];
 
     // 显示开场语
@@ -83,11 +79,6 @@
     function respond() {
       const input = document.getElementById('userInput').value.toLowerCase();
       const responseBox = document.getElementById('response');
-
-      // 清除动画类与旧内容
-      responseBox.classList.remove('fade-out');
-      responseBox.style.visibility = 'visible';
-      responseBox.style.opacity = '1';
       responseBox.textContent = '';
 
       const isGreeting = greetings.some(word => input.includes(word));
@@ -109,10 +100,6 @@
           i++;
         } else {
           clearInterval(typingInterval);
-          // 打完后停2秒再淡出
-          setTimeout(() => {
-            responseBox.classList.add('fade-out');
-          }, 2000);
         }
       }, typingSpeed);
     }
