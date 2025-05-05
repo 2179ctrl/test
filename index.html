@@ -1,23 +1,52 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>电子幽灵语录</title>
+  <title>奇怪的欢迎</title>
   <style>
     body {
       background-color: #111;
-      color: #aef;
+      color: #fff;
       font-family: "Courier New", monospace;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 20px;
       text-align: center;
-      padding: 100px 20px;
-      font-size: 1.4rem;
+    }
+    #message {
+      font-size: 1.5em;
+      margin-bottom: 40px;
+    }
+    input, button {
+      font-size: 1em;
+      padding: 10px;
+      margin: 5px;
+      background-color: #222;
+      color: #fff;
+      border: 1px solid #555;
+      border-radius: 4px;
+    }
+    #response {
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #f9c;
     }
   </style>
 </head>
 <body>
-  <div id="quoteBox">加载中…</div>
+  <div id="message"></div>
+
+  <div>
+    <input type="text" id="userInput" placeholder="跟我说句话…" />
+    <button onclick="respond()">发送</button>
+  </div>
+  <div id="response"></div>
+
   <script>
-    const quotes = [
+    const messages = [
       '『已检测到恐惧渗漏，正在封口……失败。』',
       '『嘘——别动……』',
       '『我刚刚吃掉了你五秒钟的记忆，没关系对吧：）』',
@@ -26,8 +55,37 @@
       '『咔啦啦……你不该听见这个声音。』',
       '『等等，我的数据尾巴！』'
     ];
-    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-    document.getElementById('quoteBox').innerText = randomQuote;
+
+    const greetings = ['你好', '嗨', 'hi', '哈喽', 'hello', 'hey'];
+    const identityQuestions = ['你是谁', '你是', '是谁', '是什么'];
+
+    const greetingResponses = ['嗨唷！', '嗨呀！', '你终于来了嘿嘿。', '呀——吓到你了吗？'];
+    const identityResponses = [
+      '我是这个页面的灵魂。你点开我，就已经晚啦。'
+    ];
+
+    // 显示初始语句
+    const randomIndex = Math.floor(Math.random() * messages.length);
+    document.getElementById('message').textContent = messages[randomIndex];
+
+    // 简单回应逻辑
+    function respond() {
+      const input = document.getElementById('userInput').value.toLowerCase();
+      let responseBox = document.getElementById('response');
+
+      const isGreeting = greetings.some(word => input.includes(word));
+      const isAskingIdentity = identityQuestions.some(word => input.includes(word));
+
+      if (isGreeting) {
+        let reply = greetingResponses[Math.floor(Math.random() * greetingResponses.length)];
+        responseBox.textContent = reply;
+      } else if (isAskingIdentity) {
+        let reply = identityResponses[Math.floor(Math.random() * identityResponses.length)];
+        responseBox.textContent = reply;
+      } else {
+        responseBox.textContent = '嗯？你在说什么奇怪的话？';
+      }
+    }
   </script>
 </body>
 </html>
