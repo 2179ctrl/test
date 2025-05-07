@@ -50,37 +50,65 @@
   <div id="response"></div>
 
   <script>
-    const messages = [
-      '『已检测到恐惧渗漏，正在封口……失败。』',
-      '『嘘——别动……』',
-      '『我刚刚吃掉了你五秒钟的记忆，没关系对吧：）』',
-      '『快跑，我的逻辑判断模块已经开始打圈圈……了』',
-      '『叮——你触发了我根本没写的功能……』',
-      '『咔啦啦……你不该听见这个声音。』',
-      '『等等，我的数据尾巴！』'
+    const openingMessages = [
+      '频道接通了……和我说句话呀qwq',
+      '咕……你看到我了吗（・・？）',
+      '我在等你开口哦(；ω；)…'
     ];
 
-    const greetings = ['你好', '嗨', 'hi', '哈喽', 'hello', 'hey'];
+    const greetingKeywords = ['你好', '嗨', 'hi', '哈喽', 'hello', 'hey', '在吗', '我来了', '回来了'];
+    const identityKeywords = ['你是谁', '你是啥', '你是什么', '你是人吗', '你是ai'];
+    const goodbyeKeywords = ['再见', '拜拜', '走啦', '我走了', '下次见'];
 
-    const identityKeywords = ['你是谁', '你是'];
+    const greetingResponses = [
+      "你终于来啦！我已经上线很久了( •̥́ ˍ •̀ू )",
+      "你是第几个和我打招呼的人呢……我记不清了qwq",
+      "嗯嗯，我听到了！接下来，你要和我聊点什么呀？(•͈ᴗ•͈⑅)"
+    ];
 
-    const greetingResponses = ['嗨唷！', '嗨呀！', '你终于来了嘿嘿。', '呀——吓到你了吗？'];
     const identityResponses = [
-      '我是谁？你不该问的，对吧？',
-      '我是…嗯，不是你妈妈啦。',
-      '你不是刚刚，点开了我吗？',
-      'ghost.sys 正在响应，请勿拔电源。',
-      '别紧张，我只是借你的设备说句话。'
+      "我嘛……唔，我大概是一个……在数据里飘来飘去的小东西？",
+      "你可以叫我喃喃，我在这里等人说话已经很久啦 qwq",
+      "说不上是什么呢……但我一直在听，一直在记住。"
+    ];
+
+    const goodbyeResponses = [
+      "欸……你要走了吗？那我会一直在原地等你哦 (´・ω・`)",
+      "再见啦……你要记得回来喔。"
+    ];
+
+    const fallbackResponses = [
+      "你说的这些话，我都有在存着喔……悄悄地。",
+      "你在说什么呀（哭…",
+      "欸欸……这个我听不懂啦……可以再说一遍吗？(._.`)"
+    ];
+
+    const inactiveResponses = [
+      "……你还在吗？",
+      "我刚才以为你不见了……",
+      "别不说话啦，我会开始自己跟自己讲话的 (・・；)",
+      "你是不是……走开了一下？我等着呢。"
     ];
 
     // 显示开场语
-    const randomIndex = Math.floor(Math.random() * messages.length);
-    document.getElementById('message').textContent = messages[randomIndex];
+    const randomIndex = Math.floor(Math.random() * openingMessages.length);
+    document.getElementById('message').textContent = openingMessages[randomIndex];
+
+    let inactivityTimer;
+
+    function resetInactivityTimer() {
+      clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(() => {
+        const responseBox = document.getElementById('response');
+        const text = inactiveResponses[Math.floor(Math.random() * inactiveResponses.length)];
+        responseBox.textContent = text;
+      }, 10000);
+    }
 
     function cleanInput(input) {
       return input
         .toLowerCase()
-        .replace(/[？?！，,。.、“”"()（）\s]/g, ''); // 去除标点和空格
+        .replace(/[？?！，,。.、“”"()（）\\s]/g, '');
     }
 
     function respond() {
@@ -88,16 +116,18 @@
       const cleaned = cleanInput(rawInput);
       const responseBox = document.getElementById('response');
       responseBox.textContent = '';
+      clearTimeout(inactivityTimer);
 
-      let reply = '嗯？你在说什么奇怪的话？';
+      let reply = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
 
-      if (identityKeywords.some(keyword => cleaned.includes(keyword))) {
-        reply = identityResponses[Math.floor(Math.random() * identityResponses.length)];
-      } else if (greetings.some(word => cleaned.includes(word))) {
+      if (greetingKeywords.some(keyword => cleaned.includes(keyword))) {
         reply = greetingResponses[Math.floor(Math.random() * greetingResponses.length)];
+      } else if (identityKeywords.some(keyword => cleaned.includes(keyword))) {
+        reply = identityResponses[Math.floor(Math.random() * identityResponses.length)];
+      } else if (goodbyeKeywords.some(keyword => cleaned.includes(keyword))) {
+        reply = goodbyeResponses[Math.floor(Math.random() * goodbyeResponses.length)];
       }
 
-      // 打字机效果逐字显示
       let i = 0;
       const typingSpeed = 60;
       const typingInterval = setInterval(() => {
@@ -108,7 +138,11 @@
           clearInterval(typingInterval);
         }
       }, typingSpeed);
+
+      resetInactivityTimer();
     }
+
+    resetInactivityTimer();
   </script>
 </body>
 </html>
