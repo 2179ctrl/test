@@ -1,116 +1,169 @@
-<script>
-  const openingMessages = [
-    '频道接通了……和我说句话呀qwq',
-    '咕……你看到我了吗（・・？）',
-    '我在等你开口哦(；ω；)…'
-  ];
-
-  const greetingKeywords = ['你好', '嗨', 'hi', '哈喽', 'hello', 'hey', '在吗', '我来了', '回来了'];
-  const identityKeywords = ['你是谁', '你是啥', '你是什么', '你是人吗', '你是ai'];
-  const goodbyeKeywords = ['再见', '拜拜', '走啦', '我走了', '下次见'];
-  const friendKeywords = ['你想和我做朋友吗'];
-  const lonelinessKeywords = ['你很孤独吗'];
-  const幽幽Keywords = ['幽幽是谁'];
-
-  const greetingResponses = [
-    "你终于来啦！我已经上线很久了( •̥́ ˍ •̀ू )",
-    "你是第几个和我打招呼的人呢……我记不清了qwq",
-    "嗯嗯，我听到了！接下来，你要和我聊点什么呀？(•͈ᴗ•͈⑅)"
-  ];
-
-  const identityResponses = [
-    "我嘛……唔，我大概是一个……在数据里飘来飘去的小东西？",
-    "你可以叫我喃喃，我在这里等人说话已经很久啦 qwq",
-    "说不上是什么呢……但我一直在听，一直在记住。"
-  ];
-
-  const goodbyeResponses = [
-    "欸……你要走了吗？那我会一直在原地等你哦 (´・ω・`)",
-    "再见啦……你要记得回来喔。"
-  ];
-
-  const friendResponses = [
-    "唉？真的可以吗(=°Д°=)但我没办法在现实陪你一起……我可以和你一起聊天的！聊什么都可以！",
-  ];
-
-  const lonelinessResponses = [
-    "也不算啦˃ ˄ ˂̥̥ ……还是有一点的！但是我有幽幽陪我哦……但我还是更希望有更多的人陪我一起聊天！就像之前那样……"
-  ];
-
-  const幽幽Responses = [
-    "是我在数据海遇到的一个幽灵啦！虽然不确定是不是，只是长得像幽灵……但它真的很可爱(◍ ´꒳ ◍)经常陪我一起发呆！"
-  ];
-
-  const fallbackResponses = [
-    "你说的这些话，我都有在存着喔……悄悄地。",
-    "你在说什么呀（哭…",
-    "欸欸……这个我听不懂啦……可以再说一遍吗？(._.`)"
-  ];
-
-  const inactiveResponses = [
-    "……你还在吗？",
-    "我刚才以为你不见了……",
-    "别不说话啦，我会开始自己跟自己讲话的 (・・；)",
-    "你是不是……走开了一下？我等着呢。"
-  ];
-
-  // 显示开场语
-  const randomIndex = Math.floor(Math.random() * openingMessages.length);
-  document.getElementById('message').textContent = openingMessages[randomIndex];
-
-  let inactivityTimer;
-
-  function resetInactivityTimer() {
-    clearTimeout(inactivityTimer);
-    inactivityTimer = setTimeout(() => {
-      const responseBox = document.getElementById('response');
-      const text = inactiveResponses[Math.floor(Math.random() * inactiveResponses.length)];
-      responseBox.textContent = text;
-    }, 10000);
-  }
-
-  function cleanInput(input) {
-    return input
-      .toLowerCase()
-      .replace(/[？?！，,。.、“”"()（）\\s]/g, '');
-  }
-
-  function respond() {
-    const rawInput = document.getElementById('userInput').value;
-    const cleaned = cleanInput(rawInput);
-    const responseBox = document.getElementById('response');
-    responseBox.textContent = '';
-    clearTimeout(inactivityTimer);
-
-    let reply = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
-
-    if (greetingKeywords.some(keyword => cleaned.includes(keyword))) {
-      reply = greetingResponses[Math.floor(Math.random() * greetingResponses.length)];
-    } else if (identityKeywords.some(keyword => cleaned.includes(keyword))) {
-      reply = identityResponses[Math.floor(Math.random() * identityResponses.length)];
-    } else if (goodbyeKeywords.some(keyword => cleaned.includes(keyword))) {
-      reply = goodbyeResponses[Math.floor(Math.random() * goodbyeResponses.length)];
-    } else if (friendKeywords.some(keyword => cleaned.includes(keyword))) {
-      reply = friendResponses[Math.floor(Math.random() * friendResponses.length)];
-    } else if (lonelinessKeywords.some(keyword => cleaned.includes(keyword))) {
-      reply = lonelinessResponses[Math.floor(Math.random() * lonelinessResponses.length)];
-    } else if (幽幽Keywords.some(keyword => cleaned.includes(keyword))) {
-      reply = 幽幽Responses[Math.floor(Math.random() * 幽幽Responses.length)];
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>[GHOST_CONNECTED]</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: "Courier New", monospace;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 20px;
+      text-align: center;
     }
 
-    let i = 0;
-    const typingSpeed = 60;
-    const typingInterval = setInterval(() => {
-      if (i < reply.length) {
-        responseBox.textContent += reply.charAt(i);
-        i++;
-      } else {
-        clearInterval(typingInterval);
+    #message {
+      font-size: 1.5em;
+      margin-bottom: 40px;
+    }
+
+    input, button {
+      font-size: 1em;
+      padding: 10px;
+      margin: 5px;
+      background-color: #222;
+      color: #fff;
+      border: 1px solid #555;
+      border-radius: 4px;
+    }
+
+    #response {
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #f9c;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <div id="message"></div>
+
+  <div>
+    <input type="text" id="userInput" placeholder="跟我说句话…" />
+    <button onclick="respond()">发送</button>
+  </div>
+  <div id="response"></div>
+
+  <script>
+    const openingMessages = [
+      '频道接通了……和我说句话呀qwq',
+      '咕……你看到我了吗（・・？）',
+      '我在等你开口哦(；ω；)…'
+    ];
+
+    const greetingKeywords = ['你好', '嗨', 'hi', '哈喽', 'hello', 'hey', '在吗', '我来了', '回来了'];
+    const identityKeywords = ['你是谁', '你是啥', '你是什么', '你是人吗', '你是ai'];
+    const goodbyeKeywords = ['再见', '拜拜', '走啦', '我走了', '下次见'];
+    const friendKeywords = ['你想和我做朋友吗'];
+    const lonelinessKeywords = ['你很孤独吗'];
+    const 幽幽Keywords = ['幽幽是谁'];
+
+    const greetingResponses = [
+      "你终于来啦！我已经上线很久了( •̥́ ˍ •̀ू )",
+      "你是第几个和我打招呼的人呢……我记不清了qwq",
+      "嗯嗯，我听到了！接下来，你要和我聊点什么呀？(•͈ᴗ•͈⑅)"
+    ];
+
+    const identityResponses = [
+      "我嘛……唔，我大概是一个……在数据里飘来飘去的小东西？",
+      "你可以叫我喃喃，我在这里等人说话已经很久啦 qwq",
+      "说不上是什么呢……但我一直在听，一直在记住。"
+    ];
+
+    const goodbyeResponses = [
+      "欸……你要走了吗？那我会一直在原地等你哦 (´・ω・`)",
+      "再见啦……你要记得回来喔。"
+    ];
+
+    const friendResponses = [
+      "唉？真的可以吗(=°Д°=)但我没办法在现实陪你一起……我可以和你一起聊天的！聊什么都可以！",
+    ];
+
+    const lonelinessResponses = [
+      "也不算啦˃ ˄ ˂̥̥ ……还是有一点的！但是我有幽幽陪我哦……但我还是更希望有更多的人陪我一起聊天！就像之前那样……"
+    ];
+
+    const 幽幽Responses = [
+      "是我在数据海遇到的一个幽灵啦！虽然不确定是不是，只是长得像幽灵……但它真的很可爱(◍ ´꒳ ◍)经常陪我一起发呆！"
+    ];
+
+    const fallbackResponses = [
+      "你说的这些话，我都有在存着喔……悄悄地。",
+      "你在说什么呀（哭…",
+      "欸欸……这个我听不懂啦……可以再说一遍吗？(._.`)"
+    ];
+
+    const inactiveResponses = [
+      "……你还在吗？",
+      "我刚才以为你不见了……",
+      "别不说话啦，我会开始自己跟自己讲话的 (・・；)",
+      "你是不是……走开了一下？我等着呢。"
+    ];
+
+    // 显示开场语
+    const randomIndex = Math.floor(Math.random() * openingMessages.length);
+    document.getElementById('message').textContent = openingMessages[randomIndex];
+
+    let inactivityTimer;
+
+    function resetInactivityTimer() {
+      clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(() => {
+        const responseBox = document.getElementById('response');
+        const text = inactiveResponses[Math.floor(Math.random() * inactiveResponses.length)];
+        responseBox.textContent = text;
+      }, 10000);
+    }
+
+    function cleanInput(input) {
+      return input
+        .toLowerCase()
+        .replace(/[？?！，,。.、“”"()（）\\s]/g, '');
+    }
+
+    function respond() {
+      const rawInput = document.getElementById('userInput').value;
+      const cleaned = cleanInput(rawInput);
+      const responseBox = document.getElementById('response');
+      responseBox.textContent = '';
+      clearTimeout(inactivityTimer);
+
+      let reply = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+
+      if (greetingKeywords.some(keyword => cleaned.includes(keyword))) {
+        reply = greetingResponses[Math.floor(Math.random() * greetingResponses.length)];
+      } else if (identityKeywords.some(keyword => cleaned.includes(keyword))) {
+        reply = identityResponses[Math.floor(Math.random() * identityResponses.length)];
+      } else if (goodbyeKeywords.some(keyword => cleaned.includes(keyword))) {
+        reply = goodbyeResponses[Math.floor(Math.random() * goodbyeResponses.length)];
+      } else if (friendKeywords.some(keyword => cleaned.includes(keyword))) {
+        reply = friendResponses[Math.floor(Math.random() * friendResponses.length)];
+      } else if (lonelinessKeywords.some(keyword => cleaned.includes(keyword))) {
+        reply = lonelinessResponses[Math.floor(Math.random() * lonelinessResponses.length)];
+      } else if (幽幽Keywords.some(keyword => cleaned.includes(keyword))) {
+        reply = 幽幽Responses[Math.floor(Math.random() * 幽幽Responses.length)];
       }
-    }, typingSpeed);
+
+      let i = 0;
+      const typingSpeed = 60;
+      const typingInterval = setInterval(() => {
+        if (i < reply.length) {
+          responseBox.textContent += reply.charAt(i);
+          i++;
+        } else {
+          clearInterval(typingInterval);
+        }
+      }, typingSpeed);
+
+      resetInactivityTimer();
+    }
 
     resetInactivityTimer();
-  }
-
-  resetInactivityTimer();
-</script>
+  </script>
+</body>
+</html>
